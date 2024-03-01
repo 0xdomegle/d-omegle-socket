@@ -2,10 +2,10 @@
   "name": "socket",
   "version": "0.0.1",
   "description": "",
-  "main": "socket.js",
+  "main": "socket.cjs",
   "scripts": {
-    "build": "npm install --production=false && npm run build && npm ci",
-    "start": "npx nodemon socket.js"
+    "build": "npm install",
+    "start": "npx nodemon socket.cjs"
   },
   "author": "",
   "license": "ISC",
