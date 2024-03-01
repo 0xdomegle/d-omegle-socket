@@ -4,6 +4,7 @@
   "description": "",
   "main": "socket.js",
   "scripts": {
+    "build": "npm install --production=false && npm run build && npm ci",
     "start": "npx nodemon socket.js"
   },
   "author": "",
