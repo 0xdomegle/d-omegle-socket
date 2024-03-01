@@ -2,9 +2,9 @@
   "name": "socket",
   "version": "0.0.1",
   "description": "",
-  "main": "socket.cjs",
+  "main": "socket.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx nodemon socket.js"
   },
   "author": "",
   "license": "ISC",
