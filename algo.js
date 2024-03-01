@@ -7,13 +7,6 @@ class User {
     }
 }
 
-class IceCandidates {
-    constructor(_socketId, _address) {
-        this.socketId = _socketId;
-        this.address = _address;
-        this.candidates = [];
-    }
-}
 
 class Session {
     constructor(_offerer, _answerer) {
@@ -25,7 +18,6 @@ class Session {
 
 // consider as an wating pool
 const users = [];
-const iceCandidates = [];
 const sessions = [];
 
-module.exports = { User, Session, users, sessions, IceCandidates, iceCandidates };
+module.exports = { User, Session, users, sessions };
