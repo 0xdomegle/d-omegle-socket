@@ -63,13 +63,17 @@ io.on("connection", (socket) => {
     });
 
     socket.on("exchangeCandidates", (data) => {
-        console.log(data.remoteSocketId);
-        socket.to(data.remoteSocketId).emit("IceCandidateRecived", data);
+        console.log(data);
+        socket.to(data.remoteSocketId).emit("IceCandidateRecived", data.candidate);
     });
 
-    socket.on("changeSession", (data) => { });
+    socket.on("changeSession", (data) => {
+        socket.to(data.remoteUserSocketID).emit("sessionEnded");
+    });
 
-    socket.on("disconnect", (data) => { });
+    socket.on("disconnect", () => {
+        console.log("user disconnect");
+    });
 });
 
 expressServer.listen(PORT, () => {
