@@ -1,10 +1,11 @@
 {
   "name": "socket",
+  "type": "module",
   "version": "0.0.1",
   "description": "",
   "main": "socket.cjs",
   "scripts": {
-    "start": "npx nodemon server.js"
+    "start": "npx nodemon server-2.js"
   },
   "author": "",
   "license": "ISC",

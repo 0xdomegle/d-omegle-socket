@@ -12,7 +12,8 @@ app.use(cors());
 const expressServer = http.createServer({}, app);
 const io = new Server(expressServer, {
     cors: {
-        origins: ["https://app.0xdomegle.com/", "http://localhost:5173/"],
+        origins: "*",
+        methods: ["GET", "POST"],
     },
 });
 
@@ -20,6 +21,8 @@ let users = [];
 
 function matchUsers() {
     console.log(users.length, "users are available");
+    console.log(users);
+
     if (users.length < 2) return;
 
     const offererIndex = Math.floor(Math.random() * users.length);
@@ -39,31 +42,35 @@ function matchUsers() {
     );
     const session = new Session(offerer, answerer);
 
-    io.to(offerer.socketId).emit("createOffer", { offererID: offerer.socketId, answererID: answerer.socketId });
+    console.log("Session created : ", session);
+
+    io.to(offerer.socketId).emit("createOffer", { offererId: offerer.socketId, answererId: answerer.socketId });
 }
 
 io.on("connection", (socket) => {
 
+    console.log("user connected : ", socket.id);
+
     socket.emit("connected", {
-        localUserSocketID: socket.id,
+        socketId: socket.id,
     })
 
     socket.on("adminUser", (data) => {
-        const user = new User(data.socketId, data.address);
+        const user = new User(socket.id, data.address);
         users.push(user);
         matchUsers();
     });
 
     socket.on("sendOffer", (data) => {
-        socket.to(data.peers.answererID).emit("createAnswer", data)
+        socket.to(data.peers.answererId).emit("createAnswer", data)
     });
 
     socket.on("sendAnswer", (data) => {
-        socket.to(data.peers.offererID).emit("reciveAnswer", data)
+        socket.to(data.peers.offererId).emit("reciveAnswer", data)
     });
 
     socket.on("exchangeCandidates", (data) => {
-        console.log(data);
+        console.log(data)
         socket.to(data.remoteSocketId).emit("IceCandidateRecived", data.candidate);
     });
 
@@ -72,7 +79,15 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log("user disconnect");
+        console.log("user disconnect : ", socket.id);
+
+        users.filter((user) => {
+            if (user.socketId === socket.id) {
+                users.splice(users.indexOf(user), 1);
+            }
+        });
+
+        console.log(users);
     });
 });
 
