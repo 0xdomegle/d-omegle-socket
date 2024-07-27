@@ -59,8 +59,11 @@ io.on("connection", (socket) => {
 
 function setupWebRTCSignaling(offerer, answerer) {
     console.log("session created between", offerer.id, "and", answerer.id);
+
     offerer.emit("generateOffer");
+
     offerer.on("offer", (data) => {
+        console.log("offer received from", offerer.id, "to", answerer.id);
         answerer.emit("offer", data);
     });
 
@@ -69,11 +72,29 @@ function setupWebRTCSignaling(offerer, answerer) {
     });
 
     offerer.on("iceCandidate", (data) => {
+        console.log("iceCandidate received from offerer");
         answerer.emit("iceCandidate", data);
     });
 
     answerer.on("iceCandidate", (data) => {
+        console.log("iceCandidate received from answerere");
         offerer.emit("iceCandidate", data);
+    });
+
+    offerer.on("changeSession", () => {
+        answerer.emit("changeSession");
+    });
+
+    answerer.on("changeSession", () => {
+        offerer.emit("changeSession");
+    });
+
+    offerer.on("leaveSession", () => {
+        answerer.emit("changeSession");
+    });
+
+    answerer.on("leaveSession", () => {
+        offerer.emit("changeSession");
     });
 }
 
